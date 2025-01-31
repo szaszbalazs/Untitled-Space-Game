@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 [RequireComponent(typeof(CharacterController))]
 public class FPSController : MonoBehaviour
@@ -32,8 +33,8 @@ public class FPSController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Bugs: Player can start running midair
-        //      Player can sprint sideways
+        //Bugs: Player can sprint sideways
+        //      
 
 
         Vector3 forward = transform.TransformDirection(Vector3.forward);
@@ -41,13 +42,13 @@ public class FPSController : MonoBehaviour
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
 
-        //if (!characterController.isGrounded) 
-        //{
-        //    isRunning = true;
-        //}
 
-        float curSpeedX = canMove ? (isRunning && characterController.isGrounded ? runSpeed : walkspeed) * Input.GetAxis("Vertical") : 0;
-        float curSpeedY = canMove ? (isRunning && characterController.isGrounded ? runSpeed : walkspeed) * Input.GetAxis("Horizontal") : 0;
+        //TODO: Movement ne az updateben legyen meghívva 200x framenként condition nélkül.
+
+        float curSpeedX = canMove ? ((isRunning && characterController.isGrounded && Input.GetAxis("Vertical") >= 1)? runSpeed : walkspeed) * Input.GetAxis("Vertical") : 0;
+
+        //smelly code
+        float curSpeedY = canMove ? (characterController.isGrounded ? walkspeed : walkspeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
