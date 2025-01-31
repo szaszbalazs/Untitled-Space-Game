@@ -7,7 +7,7 @@ public class FPSController : MonoBehaviour
 {
     public Camera FpsCamera;
     public float walkspeed = 6f;
-    public float runSpeed =  9f;
+    public float runSpeed =  2f;
     public float jumpPower = 7f;
     public float gravity = 10f;
 
@@ -32,12 +32,22 @@ public class FPSController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Bugs: Player can start running midair
+        //      Player can sprint sideways
+
+
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
-        float curSpeedX = canMove ? (isRunning ? runSpeed : walkspeed) * Input.GetAxis("Vertical") : 0;
-        float curSpeedY = canMove ? (isRunning ? runSpeed : walkspeed) * Input.GetAxis("Horizontal") : 0;
+
+        //if (!characterController.isGrounded) 
+        //{
+        //    isRunning = true;
+        //}
+
+        float curSpeedX = canMove ? (isRunning && characterController.isGrounded ? runSpeed : walkspeed) * Input.GetAxis("Vertical") : 0;
+        float curSpeedY = canMove ? (isRunning && characterController.isGrounded ? runSpeed : walkspeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
